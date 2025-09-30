@@ -523,18 +523,28 @@ class mssqlStream(SQLStream):
                 # Apply redundancy to pull some days before the start_val
                 if start_val:
                     rk_redundancy_days = self.config.get("rk_redundancy", 0)
+                    self.logger.info(
+                        f"Debug - rk_redundancy: {rk_redundancy_days} days."
+                    )
                     if isinstance(rk_redundancy_days, int) and rk_redundancy_days > 0:
                         self.logger.info(
-                            "Applying replication key redundancy of "
-                            f"{rk_redundancy_days} days."
+                            f"Applying replication key redundancy of {rk_redundancy_days} days."
                         )
                         start_val -= datetime.timedelta(days=rk_redundancy_days)
+
+                    else:
+                        self.logger.info(
+                            "No redundancy was applied"
+                        )
 
             else:
                 start_val = self.get_starting_replication_key_value(context)
 
             if start_val:
                 query = query.where(replication_key_col >= start_val)
+                self.logger.info(
+                    f"Applying query filter: {query}"
+                )
 
         if self.ABORT_AT_RECORD_COUNT is not None:
             # Limit record count to one greater than the abort threshold.
