@@ -522,15 +522,15 @@ class mssqlStream(SQLStream):
 
                 # Apply redundancy to pull some days before the start_val
                 if start_val:
-                    rk_redundancy_days = self.config.get("rk_redundancy", 0)
+                    lookback_window_days = self.config.get("rk_redundancy", 0)
                     self.logger.info(
-                        f"Debug - rk_redundancy: {rk_redundancy_days} days."
+                        f"Debug - rk_redundancy: {lookback_window_days} days."
                     )
-                    if isinstance(rk_redundancy_days, int) and rk_redundancy_days > 0:
+                    if isinstance(lookback_window_days, int) and lookback_window_days > 0:
                         self.logger.info(
-                            f"Applying replication key redundancy of {rk_redundancy_days} days to the start_val {start_val}."
+                            f"Applying replication key redundancy of {lookback_window_days} days to the start_val {start_val}."
                         )
-                        start_val -= datetime.timedelta(days=rk_redundancy_days)
+                        start_val -= datetime.timedelta(days=lookback_window_days)
                         self.logger.info(
                             f"Debug - FINAL start_val: {start_val}"
                         )
