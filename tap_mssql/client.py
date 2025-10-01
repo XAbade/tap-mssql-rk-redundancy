@@ -528,10 +528,13 @@ class mssqlStream(SQLStream):
                     )
                     if isinstance(rk_redundancy_days, int) and rk_redundancy_days > 0:
                         self.logger.info(
-                            f"Applying replication key redundancy of {rk_redundancy_days} days."
+                            f"Applying replication key redundancy of {rk_redundancy_days} days to the start_val {start_val}."
                         )
                         start_val -= datetime.timedelta(days=rk_redundancy_days)
-
+                        self.logger.info(
+                            f"Debug - FINAL start_val: {start_val}"
+                        )
+                    
                     else:
                         self.logger.info(
                             "No redundancy was applied"
